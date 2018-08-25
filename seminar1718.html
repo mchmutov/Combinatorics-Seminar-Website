@@ -1,0 +1,264 @@
+<html>
+<head>
+<title>University of Minnesota Combinatorics Seminar; 2017-2018</title>
+
+<!-- --------------------------------------- -->
+<!-- Load various nonsense from the internet -->
+<!-- --------------------------------------- -->
+
+<!-- Include style sheet -->
+<link type="text/css" rel="stylesheet" href="seminar_style_1718.css">
+
+<!-- Load the jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- MathJax script for processing LaTeX -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$']]}
+  });
+</script>
+
+<!-- ------------------------------------------------------------------------------ -->
+<!-- Main script for switching between showing the schedule and showing an abstract -->
+<!-- ------------------------------------------------------------------------------ -->
+<script>
+/*-------------------------------------------------------------------------------------------- */
+/* A function that opens up the correct sections of the site, depending on value after hashtag */
+var openCorrectSections = function() {
+  var url = window.location.href;
+  var params = url.split('#');
+  if ((params.length == 1) || (params[1]=="")) {
+    /* If there was no hashtag, or if there was no string after hashtag, we should load the schedule view */
+	  $("#GeneralInfo").show();
+	  $("#Schedule").show();
+        $("#AbstractSpace").hide();
+	  $("#LastModified").show();
+	  $("#BackToSchedule").hide();
+  }
+  else{
+    /* Otherwise we should load the abstract for the identifier (currently date string), stored in variable params[1], after the hashtag */
+    $("#GeneralInfo").hide();
+    $("#Schedule").hide();
+    $("#Abstract").html("<h2>" +  $("#" + params[1]).find(".t").html() + "</h2>"+
+                        "<h3>" +  $("#" + params[1]).find(".n").html() + "</h3>"+
+                        "<h4>" +  $("#" + params[1]).find(".w").html() + ", " + $("#" + params[1]).find(".d").html() + " " + $("#" + params[1]).find(".h").html()+ "</h4>"+
+                        "<h4>" +  $("#" + params[1]).find(".p").html() + "</h4>"+
+                        "<p>"  +  $("#" + params[1]).find(".a").html() + "</p>");
+    $("#AbstractSpace").show();
+    $("#LastModified").hide();
+    $("#BackToSchedule").show();
+  }
+};
+/*----------------------------------------------------------------------------------------- */
+
+/*----------------------------------------------------------------------------------------- */
+/* Upon loading, we should put the database into the schedule table and then open up correct sections of the site (if hashtag was entered into the url directly, may need to display abstract)*/
+window.addEventListener("load", function() {
+    /* Assemble the html for the schedule section in an array of strings called r */
+    var r = new Array(),  j = -1;
+    r[++j] = '<tr><th class="heading">Date</th><th class="heading">Speaker</th><th class="heading">Affiliation</th><th class="heading">Title</th></tr>'; /* First row has column titles for the table */
+    
+    /* Semeseters come in reverse chronological order, so Summer comes first */
+    r[++j] = '<tr><th class="heading" colspan="4">Summer 2018</th></tr>'; /* Second row is semester heading */
+    var dSu = $('#OrderedTalkIdsSU').data('list'); /* Store the section of the database related to summer talks in variable dSu; each row in dSu corresponds to a talk */
+    for (var index=0; index<dSu.length; index++){
+       /* Form a row of the table corresponding to a talk */
+       r[++j] = '<tr><td>';
+       r[++j] = $("#"+dSu[index]).find(".d").html(); /* First column contains date and */
+       r[++j] = $("#"+dSu[index]).find(".u").html(); /* modifiers for unusual times, dates, rooms, etc. */
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+dSu[index]).find(".n").html(); /* Second column contains speaker's name */
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+dSu[index]).find(".f").html(); /* Third column contains speamer's affiliation */
+       r[++j] = '</td><td><a href = "#';             /* Last columns contains the title of the talk, hyperlinked to the abstract */
+       r[++j] = dSu[index];
+       r[++j] = '">';
+       r[++j] = $("#"+dSu[index]).find(".t").html();
+       r[++j] = '</a></td></tr>';
+    }
+    r[++j] = '<tr><th class="heading" colspan="4">Spring 2018</th></tr>';
+    var dSp = $('#OrderedTalkIdsSP').data('list');
+    for (var index=0; index<dSp.length; index++){
+       r[++j] = '<tr><td>';
+       r[++j] = $("#"+dSp[index]).find(".d").html();
+       r[++j] = $("#"+dSp[index]).find(".u").html();
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+dSp[index]).find(".n").html();
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+dSp[index]).find(".f").html();
+       r[++j] = '</td><td><a href = "#';
+       r[++j] = dSp[index];
+       r[++j] = '">';
+       r[++j] = $("#"+dSp[index]).find(".t").html();
+       r[++j] = '</a></td></tr>';
+    }
+    var d = $('#OrderedTalkIds').data('list');
+    r[++j] = '<tr><th class="heading" colspan="4">Fall 2017</th></tr>';
+    for (var index=0; index<d.length; index++){
+       r[++j] = '<tr><td>';
+       r[++j] = $("#"+d[index]).find(".d").html();
+       r[++j] = $("#"+d[index]).find(".u").html();
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+d[index]).find(".n").html();
+       r[++j] = '</td><td>';
+       r[++j] = $("#"+d[index]).find(".f").html();
+       r[++j] = '</td><td><a href = "#';
+       r[++j] = d[index];
+       r[++j] = '">';
+       r[++j] = $("#"+d[index]).find(".t").html();
+       r[++j] = '</a></td></tr>';
+    }
+  $('#ScheduleTable').html(r.join('')); /* Stuff the html just composed into the schedule table */
+  openCorrectSections(); /* Show correct sections of the website depending on whether we want to see the schedule view or an abstract */
+});
+/*----------------------------------------------------------------------------------------- */
+
+/*----------------------------------------------------------------------------------------- */
+/* Upon change after hash we should open or close the correct sections of the site. */
+window.addEventListener("hashchange", openCorrectSections);
+/*----------------------------------------------------------------------------------------- */
+</script>
+</head>
+
+<body>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
+<!-- The database section with information about dates, speakers, etc. This will never be shown so style always remains "display: none;". -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------ -->
+
+<div id="Database" style="display: none;">
+
+<!-- -------- -->
+<!-- EXAMPLES -->
+<!-- -------- -->
+
+<!-- Sample databse entry with explanations for fields -->
+
+<div id = 20140903> <!-- Identifier for a talk; I was using a date string -->
+<!-- Title -->       <div class="t">Some title</div>
+<!-- Name -->        <div class="n">Some Person</div>
+<!-- Affiliation --> <div class="f">USomething</div>
+<!-- Day of Week --> <div class="w">Wednesday</div>
+<!-- Date -->        <div class="d">Sept. 3, 2014</div>
+<!-- Time -->        <div class="h">8:00-8:50am</div>
+<!-- Place -->       <div class="p">Vincent Hall 313</div>
+<!-- Unusual -->     <div class="u"><br><b>unusual day (Wed.)</b><br><b>place (VinH 313)</b><br><b>and time (8am)</b></div>
+<!-- Abstract -->    <div class="a">Some Abstract. $e^x$</div>
+</div>
+
+<!-- TBA database entry (e.g. when no talk is scheduled) -->
+
+<div id = 20180907><div class="t"></div>TBA<div class="n">TBA</div> <div class="f">TBA</div><div class="w">Friday</div><div class="d">Sept. 7, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">TBA</div></div>
+
+<!-- ---- -->
+<!-- Data -->
+<!-- ---- -->
+
+<!-- Fall data -->
+<!-- FIRST LINE MUST BE THERE; IT GIVES AN ORDERED LIST OF TALK IDENTIFIERS THAT APPEAR IN A GIVEN SEMESTER -->
+<div id="OrderedTalkIds" data-list='["20170915","20170922","20170929","20171006","20171013","20171020","20171027","20171103","20171110","20171117","20171124","20171201","20171208","20171215"]'></div>
+
+<!-- Data about individual talks -->
+<div id = 20170915><div class="t">Coxeter transformation on cominuscule posets</div><div class="n">Emine Y&#x131ld&#x131r&#x131m</div><div class="f">UQAM</div><div class="w">Friday</div><div class="d">Sept. 15, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">Let $P$ be a cominuscule poset which can be thought of as a parabolic analogue of the poset of positive roots of a finite root system. Let $J(P)$ be the poset of order ideals of $P$. In this talk, we will investigate the periodicity of the Coxeter transformation on the poset $J(P)$, and show that the Coxeter transformation has finite order for two of the three infinite families of cominuscule posets, and the exceptional cases. Our motivation comes from a conjecture by Chapoton which states that the Coxeter transformation has finite order on the poset $J(R)$ when $R$ is the poset of positive roots of a finite root system. Our solution is formulated in representation theory of finite dimensional algebras, and we will further discuss the results within the same context.</div></div>
+<div id = 20170922><div class="t">Random Flag Complexes and Asymptotic Syzygies</div><div class="n">Jay Yang</div><div class="f">UWisconsin</div><div class="w">Friday</div><div class="d">Sept. 22, 2017</div><div class="h"></div><div class="p">Vincent Hall 016</div><div class="u"><br><b>Unusual location: VinH 016</b><br>(consider visiting <a href = "http://www-users.math.umn.edu/~cberkesc/CA/CA2017.html">CA+</a>)</div><div class="a">We use the probabilistic method to construct examples of conjectured phenomenon about asymptotic syzygies. In particular, we use the Stanley-Reisner ideals of random flag complexes to construct new examples of Ein and Lazarsfeld's nonvanishing for asymptotic syzygies and of Ein, Erman, and Lazarsfeld's conjectural on the asymptotic normal distribution of Betti numbers.</div></div>
+<div id = 20170929><div class="t">Cyclic symmetry in the Grassmannian</div><div class="n">Steven Karp</div><div class="f">Michigan</div><div class="w">Friday</div><div class="d">Sept. 29, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The Grassmannian $Gr(k,n)$ is the space of $k$-planes in $C^n$. Its totally nonnegative part is the subset where all Pl�cker coordinates are real and nonnegative. There is a natural action of the cyclic group of order $n$ on $Gr(k,n)$ which preserves its totally nonnegative part. This 'cyclic symmetry' is prominent in the combinatorics of the totally nonnegative Grassmannian. I will discuss some surprising properties of the fixed points of the cyclic action. I will also present joint work with Pavel Galashin and Thomas Lam, which uses the cyclic action to show that the totally nonnegative part of $Gr(k,n)$ is homeomorphic to a ball.</div></div>
+
+<div id = 20171006><div class="t">Recent results in enumeration</div><div class="n">Dennis Stanton</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Oct. 6, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">I will survey some of my recent joint results in enumeration, including (1) integer partitions (2) enumeration over finite fields (3) orthogonal polynomials (4) posets. I will indicate open directions for each of these areas. No proofs will be given. This is joint work with Fulman, Guralnick, Ismail, Kim, Lewis, O�Hara, Rains, and Reiner.</div></div>
+<div id = 20171013><div class="t">Representation stability: A case study</div><div class="n">Cihan Bahran</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Oct. 13, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The (ordered) configuration space of the complex plane has ties into various areas of mathematics. Church-Farb showed that, as the number of points in the configuration increases, the corresponding action of the symmetric group in cohomology "stabilizes" in a certain way. I will explain this phenomenon in the case of $H^1$ for the complex plane, and then talk about generalizations to other manifolds (Church) and some recent developments in the stable range.</div></div>
+<div id = 20171020><div class="t">Chip-firing for root systems</div><div class="n">Sam Hopkins</div><div class="f">MIT</div><div class="w">Friday</div><div class="d">Oct. 20, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a"><p>Propp recently introduced a variant of chip-firing on the infinite path where the chips are given distinct integer labels and conjecture that this process sorts certain (but not all) initial configurations of chips. Hopkins, McConville, and Propp proved Propp's sorting conjecture. We recast this result in terms of root systems: the labeled chip-firing game can be seen as a �vector-firing� process which allows the moves $\lambda \to \lambda + \alpha$ for $\alpha \in \Phi^+$ whenever $\langle \lambda, \alpha^\vee \rangle = 0$, where $\Phi^+$ is the set of positive roots of a root system of type $A_{2n-1}$. We give conjectures about confluence for this process in the general setting of an arbitrary root system. We show that the process is always confluent from any initial point after modding out by the action of the Weyl group (an analog of unlabeled chip-firing in arbitrary type). We also show that if we instead allow firing when $\langle \lambda, \alpha^\vee \rangle  \in [-k-1,k-1]$ or $[-k,k-1]$, we always get confluence from any initial point. Moreover, in these two settings, the set of weights with given stabilization has a remarkable geometric structure related to permutohedra. This geometric structure leads us to define certain �Ehrhart-like� polynomials that conjecturally have nonnegative integer coefficients.</p><p>This is joint work with Pavel Galashin, Thomas McConville, and Alex Postnikov.</p></div></div>
+<div id = 20171027><div class="t">Component preserving mutations: building up maximal green sequences from sub-quivers</div><div class="n">Eric Bucher</div><div class="f">Michigan State</div><div class="w">Friday</div><div class="d">Oct. 27, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">Quiver mutation is a operation one can define on a directed graph that has shown to model the behavior of a large variety of mathematical objects. We will discuss a bit about quiver mutation, and the proceed to exploring quivers for a special sequence of mutations called maximal green sequences. The aim of the talk is to discuss recent work that allows one to build maximal green sequences for larger quivers by looking at "component preserving" sequences on induced subquivers. These new techniques have allowed us to construct maximal green sequences for large families of quivers where their existence was previously unknown.</div></div>
+
+<div id = 20171103><div class="t">Robinson-Schensted-Knuth via quiver representations</div><div class="n">Hugh Thomas</div><div class="f">UQAM</div><div class="w">Friday</div><div class="d">Nov. 3, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The Robinson-Schensted-Knuth correspondence is a many-faceted jewel of algebraic combinatorics.  In one variation, it provides a bijection between permutations of $n$ and pairs of standard Young tableaux with the same shape, which is a partition of $n$.  In another (more general) version, it provides a bijection between fillings of a partition $\lambda$ by arbitrary non-negative integers and fillings of the same shape $\lambda$ by non-negative integers which weakly increase along rows and down columns (i.e., reverse plane partitions of shape $\lambda$).  I will discuss an interpretation of RSK in terms of the representation theory of type $A$ quivers (i.e., directed graphs obtained by orienting a path graph). This allows us to generalize RSK to other Dynkin types (plus a choice of minuscule weight), and is related to periodicity results for piecewise-linear toggling.  I will not assume familiarity with either RSK or with quiver representations.  This is joint work with Al Garver and Becky Patrias.</div></div>
+<div id = 20171110><div class="t">The Mullineux involution and wall-crossing for the rational Cherednik algebra</div><div class="n">Galyna Dobrovolska</div><div class="f">Columbia</div><div class="w">Friday</div><div class="d">Nov. 10, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The Mullineux involution on $p$-regular Young diagrams corresponds to the operation of taking the tensor product with the sign representation on modules for the symmetric group in characteristic $p$. In my talk I will report on some results towards proving R. Bezrukavnikov's conjectures on wall-crossing for the rational Cherednik algebra in positive characteristic, which was linked to the Mullineux involution by I. Loseu.</div></div>
+<div id = 20171117><div class="t">Identities for symmetric skew Grothendieck polynomials</div><div class="n">Damir Yeliussizov</div><div class="f">UCLA</div><div class="w">Friday</div><div class="d">Nov. 17, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">Symmetric Grothendieck polynomials can be viewed as an analog of Schur polynomials for the K-theory of Grassmannians. I will present various properties and applications for dual families of skew Grothendieck polynomials, such as skew Cauchy identities, skew Pieri rules, dual filtered Young graphs, generating series identities, some probabilistic models, and enumerative results.</div></div>
+<div id = 20171124><div class="t"></div><div class="n"><b>No seminar</b></div><div class="f"></div><div class="w">Friday</div><div class="d">Nov. 24, 2017</div><div class="h"></div><div class="p"></div><div class="u"></div><div class="a"></div></div>
+
+<div id = 20171201><div class="t">Chromatic Graph Homology for Brace Algebras</div><div class="n">Vladimir Baranovsky</div><div class="f">UC Irvine</div><div class="w">Friday</div><div class="d">Dec. 1, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a"><p>The chromatic graph homology complex $C_G(A)$ of a graded commutative algebra $A$ and a graph $G$ was originally defined by Helme-Guizon and Rong. It may be viewed as a toy version (comultiplication free version) of the Khovanov homology complex of a link (in the special case when $G$ is the Tait graph of a link diagram and $A$ is the cohomology of a sphere).</p><p>When $A$ is the de Rham algebra of a compact oriented manifold $M$, our earlier work with R. Sazdanovic has related $C_G(A)$ to the homology of the "graph configuration space" obtained by taking the cartesian power of $M$ and removing a subset of diagonals encoded by $G$.</p><p>In a recent work with M. Zubkov we investigate whether the commutativity assumption on $A$ may e relaxed to homotopy commutativity. We construct $C_G(A)$ in the case when $A$ is a brace algebra and $G$ is a planar tree. Examples of such $A$ include singular cochain algebras (McClure-Smith), Hochschild cochains of associative algebras (Gerstenhaber-Voronov) and cobar constructions on Hopf algebras (Kadeishvili, Young). We hope that the last class of examples can get us closer to an explicit model for computing invariants of codimension 2 tangles, as provided by the formalism of (stratified) factorization homology.</p></div></div>
+<div id = 20171208><div class="t">Canonical bases for permutohedral plates</div><div class="n">Nick Early</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Dec. 8, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">There is a natural construction according to which the set of all faces of an arrangement of hyperplanes can be made into a vector space, by taking linear combinations of their characteristic functions. Our space is equipped with a standard basis of polyhedral cones called permutohedral cones, studied as plates by A. Ocneanu, consisting of characteristic functions which are labeled by ordered set partitions; these are in duality with faces of the arrangement of reflection hyperplanes $x_i=x_j$.  Motivated in particular by the desire to justify certain shuffle-type relations coming from quantum field theory, we construct a new, canonical basis which is compatible with one or both of two quotients: modding out by characteristic functions of (1) nonpointed cones containing doubly infinite lines, and (2) cones of codimension at least 1.  The important feature here is that subsets of the basis map to bases of the quotients.</div></div>
+<div id = 20171215><div class="t">Folding and dominance: relationships among mutation fans for surfaces and orbifolds</div><div class="n">Shira Viel</div><div class="f">NCSU</div><div class="w">Friday</div><div class="d">Dec. 15, 2017</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The $n$-associahedron is a well-known $n$-dimensional polytope whose vertices are labeled by triangulations of an $(n+3)$-gon with edges given by diagonal flips. The $n$-cyclohedron is defined analogously using centrally-symmetric triangulations of a $(2n+2)$-gon, or, modding out by the symmetry, triangulations of an $(n+1)$-gon with one orbifold point. The polytopes can be realized in such a way that their normal fans are the ``$\mathbf{g}$-vector fans," or ``mutation fans," for certain cluster algebras. In this talk I will justify and generalize two relationships which hold between these fans: the normal fan to the $n$-cyclohedron can be obtained by intersecting the normal fan to the $(2n-1)$-associahedron with a certain subspace, and the normal fan to the $n$-cyclohedron refines the normal fan to the $n$-associahedron. I will show that these relationships are instances of ``folding" and ``dominance," respectively, and hold more generally for mutation fans for cluster algebras modeled by surfaces and orbifolds.</div></div>
+
+<!-- Spring data -->
+<div id="OrderedTalkIdsSP" data-list='["20180119","20180126","20180205","20180209","20180216","20180223","20180302","20180309","20180316","20180323","20180330","20180406","20180413","20180420","20180427","20180504"]'></div>
+
+<div id = 20180119><div class="t">Affine Growth Diagrams</div><div class="n">Tair Akhmejanov</div><div class="f">Cornell</div><div class="w">Friday</div><div class="d">Jan. 19, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">We introduce a new type of growth diagram, arising from the geometry of the affine Grassmannian for $GL_m$. These affine growth diagrams are in bijection with the $c_{\vec\lambda}$ many components of the polygon space Poly($\vec\lambda$) for $\vec\lambda$ a sequence of minuscule weights and $c_{\vec\lambda}$ the Littlewood-Richardson coefficient. Unlike Fomin growth diagrams, they are infinite periodic on a staircase shape, and each vertex is labeled by a dominant weight of $GL_m$. Letting $m$ go to infinity, a dominant weight can be viewed as a pair of partitions, and we recover the RSK correspondence and Fomin growth diagrams within affine growth diagrams. The main combinatorial tool used in the proofs is the $n$-hive of Knutson-Tao-Woodward. The local growth rule satisfied by the diagrams previously appeared in van Leeuwen's work on Littelmann paths, so our results can be viewed as a geometric interpretation of this combinatorial rule.</div></div>
+<div id = 20180126><div class="t">Parametric behavior of A-hypergeometric solutions</div><div class="n">Christine Berkesch</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Jan. 26, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">
+A-hypergeometric systems are the D-module counterparts of toric ideals, and their behavior is linked closely to the combinatorics of toric varieties. I will discuss recent work that aims to explain the behavior of the solutions of these systems as their parameters vary. In particular, we stratify the parameter space so that solutions are locally analytic within each (connected component of a) stratum. This is joint work with Jens Forsg�rd and Laura Matusevich.</div></div>
+
+<div id = 20180202><div class="t">TBA</div><div class="n">TBA</div><div class="f">TBA</div><div class="w">Friday</div><div class="d">Feb. 2, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">TBA</div></div>
+<div id = 20180205><div class="t">The Hall Algebra at $t = 1/q$ and Torus Knots</div><div class="n">Adriano Garsia</div><div class="f">UCSD</div><div class="w"><font color="red">Monday</font></div><div class="d"><font color="red">Feb. 5, 2018</font></div><div class="h"><font color="red">1:25-2:30pm</font></div><div class="p"><font color="red">Vincent Hall 301</font></div><div class="u"><br><b>Unusual time (Mon., 1:25pm)<br>and place (VinH 301)</b></div><div class="a">In this talk we show that the Hall Algebra operators $Q_{km, kn}$ with $k = gcd(km, kn)$ may be given for $t=1/q$ a very simple plethystic form. This discovery yields elementary and direct derivations of several identities relating these operators at $t=1/q$ and their relation to the Rational Compositional Shuffle conjecture (now a Theorem). We also show a glimpse of how this is all related to Torus knows.</div></div>
+<div id = 20180209><div class="t">Algebras of quantum monodromy data and decorated character varieties</div><div class="n">Leonid Chekhov</div><div class="f">Michigan State</div><div class="w">Friday</div><div class="d">Feb. 9, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">We discuss the Riemann-Hilbert correspondence for extensions of the de Rham moduli space by allowing connections with higher order poles. We show that geometrically this corresponds to interpreting higher order poles in the connection as boundary components with bordered cusps (vertices of ideal triangles in the Poincar&eacute metric) on the Riemann surface.  We thus introduce the notion of decorated character variety. This decorated character variety is the quotient of the space of representations of the fundamental groupid of arcs by a product of unipotent Borel subgroups (one per bordered cusp). We demonstrate that this representation space is endowed with a Poisson structure induced by the Fock-Rosly bracket and show that the quotient by unipotent Borel subgroups giving rise to the decorated character variety is a Poisson reduction. We deal with the Poisson bracket and its quantization simultaneously, thus providing a quantisation of the decorated character variety. In the case of dimension 2, we also endow the representation space with explicit Darboux coordinates. We conclude with a conjecture on the extended Riemann-Hilbert correspondence for higher rank algebras (joint work with M. Mazzocco and V. Rubtsov).</div></div>
+<div id = 20180216><div class="t">Equivariant quantum cohomology of the Grassmannian via rim hooks and puzzles</div><div class="n">Kaisa Taipale</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Feb. 16, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">We present a non-recursive, positive combinatorial formulas for expressing the equivariant quantum product in the Schubert basis of the Grassmannian. This extends work of Bertram, Ciocan-Fontanine and Fulton, who provided a way to compute quantum products of Schubert classes of the Grassmannian by applying a combinatorial rimhook rule. Combining our equivariant rule with Knutson and Tao's puzzle rule provides an effective algorithm for computing equivariant quantum Littlewood-Richardson coefficients (polynomials). This rule requires a specialization of torus weights that is tantalizingly similar to maps in affine Schubert calculus.</div></div>
+<div id = 20180223><div class="t">Biclosed sets in representation theory</div><div class="n">Alexander Garver</div><div class="f">UQAM</div><div class="w">Friday</div><div class="d">Feb. 23, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The weak order on elements of a Coxeter group appears in many mathematical contexts including geometric combinatorics, generalized associahedra, and representation theory of preprojective algebras. The weak order may be equivalently described using biclosed sets. We study lattices of biclosed sets that generalize the weak order on permutations. We show that any such lattice of biclosed sets is isomorphic to subcategories of the module category of an analogue of the preprojective algebra, which we call torsion shadows. If time permits, we will present a similar description of the shard intersection order of these lattices of biclosed sets. This is joint work with Thomas McConville and Kaveh Mousavand.</div></div>
+
+<div id = 20180302><div class="t">Double jump phase transition in a random soliton cellular automaton</div><div class="n">Hanbaek Lyu</div><div class="f">Ohio State</div><div class="w">Friday</div><div class="d">Mar. 2, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a"><p>In this talk, we consider the soliton cellular automaton introduced by Takahashi and Satsuma in 1990 with a random initial configuration. We give multiple constructions of a Young diagram describing various statistics of the system in terms of familiar objects like birth-and-death chains and Galton-Watson forests. Using these ideas, we establish limit theorems showing that if the first $n$ boxes are occupied independently with probability $p\in(0,1)$, then the number of solitons is of order $n$ for all $p$, and the length of the longest soliton is of order $\log n$  for $p<1/2$, order $\sqrt{n}$ for $p=1/2$, and order $n$ for $p>1/2$. Additionally, we uncover a condensation phenomenon in the supercritical regime: For each fixed $j\geq 1$, the top $j$ soliton lengths have the same order as the longest for $p\leq 1/2$, whereas all but the longest have order at most $\log n$ for $p>1/2$. As an application, we obtain scaling limits for the lengths of the $k^{\text{th}}$ longest increasing and decreasing subsequences in a random stack-sortable permutation of length $n$ in terms of random walks and Brownian excursions.</p><p>This is a joint work with Lionel Levine and John Pike.</p></div></div>
+<div id = 20180309><div class="t">Ice and Everything Else</div><div class="n">Benjamin Brubaker</div><div class="f">UMN</div><div class="w">Friday</div><div class="d">Mar. 9, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">We'll discuss how solvable lattice models (including the "square ice" model of the title) sit at the nexus of so many interesting fields of mathematics, including combinatorics, mathematical physics, representation theory, and algebraic topology, to name a few. Examples will include both the Jones polynomial for distinguishing knots and Kuperberg's proof of the alternating sign matrix conjecture. Yet other examples we'll mention are joint work with Bump and Friedberg, and a more recent paper with Schultz.</div></div>
+<div id = 20180316><div class="t"></div><div class="n"><b>No seminar (Spring break)</b></div><div class="f"></div><div class="w">Friday</div><div class="d">Mar. 16, 2018</div><div class="h"></div><div class="p"></div><div class="u"></div><div class="a"></div></div>
+<div id = 20180323><div class="t">Sandpiles and representation theory</div><div class="n">Vic Reiner</div><div class="f">UMN</div>TBA<div class="w">Friday</div><div class="d">Mar. 23, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">Every graph has a subtle invariant, called its sandpile group:  a finite abelian group whose size is the number of spanning trees in the graph.  After reviewing this, we will discuss an analogous "sandpile group" for any representation of a finite group, motivated in part by the classical McKay correspondence. (Based on joint work with Georgia Benkart, Carly Klivans, Christian Gaetz, Jia Huang, and Darij Grinberg.)</div></div>
+<div id = 20180330><div class="t">Coxeter combinatorics of involutions with applications to geometry</div><div class="n">Zach Hamaker</div><div class="f">Michigan</div><div class="w">Friday</div><div class="d">Mar. 30, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The combinatorics of Coxeter groups has been a rich area of study for many years, motivated by connections to the geometry of flag varieties and representation theory. Building on work of Richardson and Springer, a similar combinatorial theory has been developed for involutions in Coxeter groups. Their original motivation comes from the geometry of spherical varieties. We highlight several aspects of this theory, including the enumeration of reduced words for involutions and a natural characterization of the Chinese monoid. We conclude with some remarks on an apparent relationship between type A spherical varieties and the geometry of the orthogonal and Lagrangian Grassmannians. This is joint work with Brendan Pawlowski and Eric Marberg.</div></div>
+
+<div id = 20180406><div class="t">Three Problems on expressions of elements of Coxeter groups</div><div class="n">Jean-Philippe Labb&eacute</div><div class="f">Freie Univ. Berlin</div><div class="w">Friday</div><div class="d">Apr. 6, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">In 2004, Knutson and Miller asked whether subword complexes of Coxeter groups can be realized as the boundary of simplicial convex polytopes. Subword complexes incarnate several well-known structures: associahedra, finite type cluster complexes, simplices, and even-dimensional cyclic polytopes, for instance. Apart from those, only 1 non-trivial case has been found to be polytopal; this problem requires a deep understanding of reduced expressions in Coxeter groups. In this talk, I will describe three very closely related classical problems on expressions in Coxeter groups that reveal challenging aspects of this open problem.</div></div>
+<div id = 20180413><div class="t">Cyclic Sieving and Cluster Duality for Grassmannian</div><div class="n">Linhui Shen</div><div class="f">Michigan State</div><div class="w"><font color="red">Thursday</font></div><div class="d"><font color="red">Apr. 12, 2018</font></div><div class="h"><font color="red">12:20-1:10pm</font></div><div class="p"><font color="red">Ford Hall 150</font></div><div class="u"><br><b>unusual time (Thu. 12:20pm)<br>& place (Ford 150)</b></div><div class="a">The cyclic sieving phenomenon (CSP) was defined by Reiner, Stanton, and White as a generalization of J. Stembridge�s q=-1 phenomenon. In this talk, we investigate the CSP for plane partitions under a piecewise-linear toggling operation. We place our result in the context of cluster theory for Grassmannians. This is joint work with Daping Weng (Yale University).</div></div>
+<div id = 20180420><div class="t">Dual braid monoids, Koszul algebras, and clusters</div><div class="n">Philippe Nadeau</div><div class="f">U. Lyon 1</div><div class="w">Friday</div><div class="d">Apr. 20, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The dual braid monoid of a finite Coxeter group $W$ is a homogeneous monoid with group of fractions the classical braid group attached to $W$. It was defined in general by David Bessis, and possesses nice algebraic and combinatorial properties. In this talk we will study the algebra of this monoid, and show that it belongs to the class of Koszul algebras. Moreover, positive elements of the cluster complex attached to $W$ naturally index a family in the "Koszul dual" of this algebra. These elements conjecturally form a basis of this dual algebra. This is joint work with Matthieu Josuat-Verg�s and Jang Soo Kim.</div></div>
+<div id = 20180427><div class="t">Young tableaux, Kazhdan-Lusztig cells, and Springer fibers</div><div class="n">Dongkwan Kim</div><div class="f">MIT</div><div class="w">Friday</div><div class="d">Apr. 27, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">The generalized Robinson-Schensted algorithm, introduced by J.-Y. Shi, is a surjection from the affine symmetric groups to the pairs of row-standard Young tableaux of the same shape. It was used to prove the conjecture of Lusztig on the enumeration of left cells in affine symmetric groups. On the other hand, combinatorics of row-standard Young tableaux is also closely related to the affine paving of Springer fibers. In this talk, I briefly recall these concepts and how they are related, and focus on generalizations of this picture to other classical types.</div></div>
+
+<div id = 20180504><div class="t">Gale-Robinson quivers, representations, and combinatorial formulas</div><div class="n">Max Glick</div><div class="f">Ohio State</div><div class="w">Friday</div><div class="d">May 4, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">Gale-Robinson sequences were one of the first examples of the Laurent phenomenon.  Moreover, the associated quivers relate to the dimer model from physics.  We investigate a family of representations of these quivers that are geared towards providing concrete information about the corresponding cluster algebras. In this way, we provide a representation theoretic explanation for known combinatorial formulas for the Gale-Robinson sequence and also obtain similar formulas for several other cluster variables. This is joint work with Jerzy Weyman.</div></div>
+
+<!-- Summer data -->
+<div id="OrderedTalkIdsSU" data-list='["20180611", "20180802", "20180803"]'></div>
+<div id = 20180611><div class="t">Wildly nontransitive dice</div><div class="n">Joe Buhler</div><div class="f">CCR La Jolla</div><div class="w">Monday</div><div class="d">Jun. 11, 2018</div><div class="h">3:35-4:25pm</div><div class="p">Vincent Hall 206</div><div class="u"></div><div class="a">Nontransitive triples of dice have been known for (at least) 60 years.  Let $A = \{2,6,7\}$, $B = \{1,5,9\}$, $C = \{3,4,8\}$ denote dice taking each of the three indicated values with probability $1/3$. As you can (and should!) check, $A$ dominates $B$ in the sense that when each is rolled  the probability that $A > B$ is greater than $1/2$. Moreover, $B$ dominates $C$, and $C$ dominates $A$, so the dominance relation is non-transitive. To make matters worse, the triple  $A[2]$, $B[2]$, $C[2]$ --- where $A[2]$ denotes the sum of two rolls of $A$, etc. --- is (as you have perhaps already checked) also a nontransitive triple. However, the cyclic dominance order is exactly the reverse of the earlier one. The goal of this talk is to present sets of dice with vastly more peculiar nontransitivity properties.</div></div>
+<div id = 20180802><div class="t">Lecture hall tableaux</div> <div class="n">Jang Soo Kim</div> <div class="f">Sungkyunkwan University</div><div class="w">Thursday</div><div class="d">Aug. 2, 2018</div><div class="h">11:00-11:55pm</div><div class="p">Vincent Hall 570</div><div class="u"></div><div class="a">We introduce lecture hall tableaux, which are fillings of a skew Young diagram satisfying certain conditions. Lecture hall tableaux generalize both lecture hall partitions and anti-lecture hall compositions, and also contain reverse semistandard Young tableaux as a limit case. We show that the coefficients in the Schur expansion of multivariate little $q$-Jacobi polynomials are generating functions for lecture hall tableaux. Using a Selberg-type integral we show that the moment of multivariate little $q$-Jacobi polynomials, which is equal to a generating function for lecture hall tableaux of a Young diagram, has a product formula. We also explore various combinatorial properties of lecture hall tableaux. This is joint work with Sylvie Corteel.</div></div>
+<div id = 20180803><div class="t">Enumeration of reflection factorizations of a Coxeter element via Malle's permutation $\Psi\in\mathrm{Perm}(\mathrm{Irrep}(W)))$</div> <div class="n">Theo Douvropoulos</div> <div class="f">IRIF, University of Paris-Diderot</div><div class="w">Friday</div><div class="d">Aug. 3, 2018</div><div class="h">1:30-2:30pm</div><div class="p">Vincent Hall 113</div><div class="u"></div><div class="a">See email for abstract.</div></div>
+
+</div>
+</div>
+
+<!-- ----------- -->
+<!-- Site layout -->
+<!-- ----------- -->
+<div class="mainbox"> <!-- This, as well as colors, etc., is defined in the style file -->
+
+<div id="head">
+<h1>University of Minnesota Combinatorics Seminar</h1>
+<h2>2017-2018</h2>
+<p><hr></p>
+</div>
+
+<!-- The "display: none;" line hides the divs initially so that the script gets to decide which ones are to be showed -->
+<div id="GeneralInfo" style="display: none;">
+<ul>
+  <li> Seminar meets on Fridays 3:35-4:25 in room 570 of <a href="http://www1.umn.edu/twincities/maps/VinH/">Vincent Hall</a>.
+  <li> <a href="http://lists.umn.edu/archives/combinatorics.html">Seminar announcement list</a> sign-up.
+  <li> Organizers: <a href="http://www-users.math.umn.edu/~musiker/">Gregg Musiker (Fall)</a>, <a href="https://sites.google.com/site/pylyavskyy/">Pavlo Pylyavskyy (Spring)</a> and <a href="http://mchmutov.net/">Mike Chmutov</a>. Website maintained by <a href="http://mchmutov.net">Mike Chmutov</a>.
+  <li><a href="http://math.umn.edu/~reiner/MinnCombSeminarArchive.html">Past seminar archive</a>.
+  <li><a href="http://www-users.math.umn.edu/~kell1642/StudentCominatoricsSeminar/seminar/Fall2017.shtml">Student Combinatorics Seminar</a>.
+</ul>
+<p><hr></p>
+</div>
+
+<!-- The section for the schedule will be filled by a script -->
+<div id="Schedule" style="display: none;">
+<table id="ScheduleTable" class="pretty" width="100%">
+</table>
+<hr>
+</div>
+
+<!-- The section containing the abstract will be filled with the correct abstract by a script -->
+<div id="AbstractSpace" style="display: none;">
+<div id="Abstract"></div>
+<hr>
+</div>
+
+<!-- Put in a "last modified" field and fill it by a short script -->
+<div id="LastModified" style="display: none;">
+</div>
+<script>
+    document.getElementById("LastModified").innerHTML = "<p>Last modified: " + new Date(document.lastModified) + "</p>";
+</script>
+
+<div id="BackToSchedule" style="display: none;">
+<a href="#">Return to the schedule</a> <!-- Put nothing after the hashtag to get back to schedule view -->
+</div>
+
+</body>
+</html>

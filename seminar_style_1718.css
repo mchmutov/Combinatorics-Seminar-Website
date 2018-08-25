@@ -1,0 +1,36 @@
+/* main green content box over grey background */
+body {background: #555555; margin-left: 10%; margin-right: 10%;}
+div.mainbox {background: #99FF99; padding-left: 2%; padding-right: 2%; padding-top: 2px; padding-bottom: 20px; border: 7px groove #333333}
+
+/* fancy table properties */
+table.pretty {
+    border: 3px solid black;
+    background: #555555
+}
+table.pretty td,th {
+   font-size: 14px;
+   border: 1px solid black;
+   padding: 10px;
+   vertical-align: top;
+}
+table.pretty tbody tr:nth-child(even) {
+   background: #55ff55;
+}
+table.pretty tbody tr:nth-child(odd) {
+   background: #99ff99;
+}
+table.pretty th.heading {
+   background-color: #00aa00;
+   font-size: large;
+}
+
+/* some more silliness */
+td.abstracts {
+   color: blue;
+   /*text-decoration: underline;*/
+}
+p.clickable {
+   color: blue;
+   /*text-decoration: underline;*/
+}
+
